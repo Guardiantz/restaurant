@@ -1,4 +1,5 @@
 import CONFIG from '../../globals/config';
+// eslint-disable-next-line import/no-self-import
 import { createRestaurantItemTemplate } from './template-creator';
 
 const createRestaurantDetailTemplate = (restaurant) => `
@@ -34,29 +35,17 @@ const createRestaurantDetailTemplate = (restaurant) => `
       </ul>
     </div>
   </div>
-  <div class="restaurant__reviews">
+ <div class="restaurant__reviews">
     <h3>Customer Reviews</h3>
     <div id="customerReviews" class="customer__reviews">
       ${restaurant.customerReviews.map((review) => `
-        <customer-review 
-          name="${review.name}" 
-          date="${review.date}" 
-          review="${review.review}"
-        ></customer-review>
+        <customer-review>
+          "${review.name}" 
+          "${review.date}" 
+          "${review.review}"
+        </customer-review>
       `).join('')}
     </div>
-    <form id="reviewForm">
-      <h4>Add Your Review</h4>
-      <div class="form__group">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required />
-      </div>
-      <div class="form__group">
-        <label for="review">Review:</label>
-        <textarea id="review" name="review" required></textarea>
-      </div>
-      <button type="submit">Submit</button>
-    </form>
   </div>
 `;
 const createFavoriteRestaurantItemTemplate = (restaurant) => `
@@ -74,9 +63,21 @@ const createFavoriteRestaurantItemTemplate = (restaurant) => `
     </div>
   </div>
 `;
+const createLikeButtonTemplate = () => `
+  <button aria-label="like this restaurant" id="likeButton" class="like">
+    <i class="fa fa-heart-o" aria-hidden="true"></i>
+  </button>
+`;
 
+const createLikedButtonTemplate = () => `
+  <button aria-label="unlike this restaurant" id="likeButton" class="like">
+    <i class="fa fa-heart" aria-hidden="true"></i>
+  </button>
+`;
 export {
   createRestaurantItemTemplate,
   createRestaurantDetailTemplate,
   createFavoriteRestaurantItemTemplate,
+  createLikeButtonTemplate,
+  createLikedButtonTemplate,
 };

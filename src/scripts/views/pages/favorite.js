@@ -16,18 +16,15 @@ const Favorite = {
   },
 
   async _renderRestaurants() {
-    const restaurants = await FavoriteRestaurantIdb.dapatkanSemuaRestoran();
+    const restaurants = await FavoriteRestaurantIdb.getSemuaRestoran();
     return restaurants
       .map((restaurant) => createFavoriteRestaurantItemTemplate(restaurant))
       .join('');
   },
 
   async afterRender() {
-    const restaurants = await FavoriteRestaurantIdb.dapatkanSemuaRestoran();
     const restaurantsContainer = document.querySelector('#restaurantsList');
-    restaurants.forEach((restaurant) => {
-      restaurantsContainer.innerHTML += createFavoriteRestaurantItemTemplate(restaurant);
-    });
+    restaurantsContainer.innerHTML = await this._renderRestaurants();
   },
 };
 

@@ -1,26 +1,50 @@
 import { openDB } from 'idb';
 import CONFIG from '../globals/config';
 
-const { NAMA_DATABASE, VERSI_DATABASE, NAMA_OBJEK_TOKO } = CONFIG;
+const { DATABASE_NAME, DATABASE_VERSION, OBJECT_STORE_NAME } = CONFIG;
 
-const dbPromise = openDB(NAMA_DATABASE, VERSI_DATABASE, {
+const dbPromise = openDB(DATABASE_NAME, DATABASE_VERSION, {
   upgrade(database) {
-    database.createObjectStore(NAMA_OBJEK_TOKO, { keyPath: 'id' });
+    database.createObjectStore(OBJECT_STORE_NAME, { keyPath: 'id' });
   },
 });
 
 const FavoriteRestaurantIdb = {
-  async dapatkanRestoran(id) {
-    return (await dbPromise).get(NAMA_OBJEK_TOKO, id);
+  async getRestoran(id) {
+    return (await dbPromise).get(OBJECT_STORE_NAME, id);
   },
-  async dapatkanSemuaRestoran() {
-    return (await dbPromise).getAll(NAMA_OBJEK_TOKO);
+
+  async getSemuaRestoran() {
+    return (await dbPromise).getAll(OBJECT_STORE_NAME);
   },
-  async simpanRestoran(restoran) {
-    return (await dbPromise).put(NAMA_OBJEK_TOKO, restoran);
+
+  // async putRestoran(resto) {
+  //   if (!resto.hasOwnProperty('id')) {
+  //     return;
+  //   }
+  //   return (await dbPromise).put(OBJECT_STORE_NAME, resto);
+  // },
+  
+  async deleteRestoran(id) {
+    return (await dbPromise).delete(OBJECT_STORE_NAME, id);
   },
-  async hapusRestoran(id) {
-    return (await dbPromise).delete(NAMA_OBJEK_TOKO, id);
+
+  async putRestoran(resto) {
+    if (!resto.hasOwnProperty('id')) {
+      return;
+    }
+    return (await dbPromise).put(OBJECT_STORE_NAME, resto);
+  },
+  async searchRestoran(query) {
+    return (await this.getSemuaRestoran()).filter((resto) => {
+      const loweredCaseRestoTitle = (resto.title || '-').toLowerCase();
+      const jammedRestoTitle = loweredCaseRestoTitle.replace(/\s/g, '');
+
+      const loweredCaseQuery = query.toLowerCase();
+      const jammedQuery = loweredCaseQuery.replace(/\s/g, '');
+
+      return jammedRestoTitle.indexOf(jammedQuery) !== -1;
+    });
   },
 };
 

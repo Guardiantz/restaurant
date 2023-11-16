@@ -1,10 +1,15 @@
 import RestaurantSource from '../../data/restaurant-source';
-import { createRestaurantItemTemplate } from '../templates/template-creator';
+import { createFavoriteRestaurantItemTemplate } from '../templates/template-creator';
 
 const Home = {
   async render() {
     return `
-      <hero></hero>
+    <div class="content-image">
+    <img src="./images/heros/hero-image_2.jpg" alt="">
+      </div>
+        <div class="seni">
+        <button>Explore Information</button>
+      </div>
       <section class="content">
         <h2 class="content__heading">Explore Restaurant</h2>
         <div id="restaurants" class="restaurants">
@@ -18,8 +23,9 @@ const Home = {
 
   async _renderRestaurants() {
     const restaurants = await RestaurantSource.daftarRestoran();
+    console.log(restaurants);
     return restaurants
-      .map((restaurant) => createRestaurantItemTemplate(restaurant))
+      .map((restaurant) => createFavoriteRestaurantItemTemplate(restaurant))
       .join('');
   },
 

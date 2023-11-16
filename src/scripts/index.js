@@ -1,8 +1,8 @@
-import 'regenerator-runtime'; // Import runtime untuk async/await
-import '../styles/style.css'; // Import file CSS utama
-import '../styles/responsive.css'; // Import file CSS responsif
-import App from './views/app'; // Import kelas App
-import CONFIG from './globals/config'; // Import konfigurasi
+import 'regenerator-runtime';
+import '../styles/style.css';
+import '../styles/responsive.css';
+import App from './views/app';
+import swRegister from './utils/sw-register';
 
 const app = new App({
   button: document.querySelector('#hamburgerButton'),
@@ -12,4 +12,9 @@ const app = new App({
 
 window.addEventListener('hashchange', () => {
   app._renderPage();
+});
+
+window.addEventListener('load', async () => {
+  app._renderPage();
+  await swRegister();
 });

@@ -1,6 +1,6 @@
 import DrawerInitiator from '../utils/drawer-initiator';
 import UrlParser from '../routes/url-parser';
-import routes from '../routes/routes'; // Pastikan mengimpor file routes
+import routes from '../routes/routes';
 
 class App {
   constructor({ button, drawer, content }) {
@@ -21,12 +21,17 @@ class App {
     this._renderPage();
   }
 
-  _renderPage() {
-    const url = UrlParser.parseActiveUrlWithoutCombiner();
+  async _renderPage() {
+    const url = UrlParser.parseActiveUrlWithCombiner();
     const page = routes[url];
     if (page) {
-      this._content.innerHTML = page.render();
-      page.afterRender();
+      this._content.innerHTML = await page.render();
+      await page.afterRender();
+      const skipLinkElem = document.querySelector('.skip-content');
+      skipLinkElem.addEventListener('click', (event) => {
+        event.preventDefault();
+        document.querySelector('#mainContent').focus();
+      });
     } else {
       this._content.innerHTML = '<p>Halaman tidak ditemukan.</p>';
     }
